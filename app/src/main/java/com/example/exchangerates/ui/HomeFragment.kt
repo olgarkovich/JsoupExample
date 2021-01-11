@@ -1,20 +1,19 @@
 package com.example.exchangerates.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exchangerates.R
 import com.example.exchangerates.adapter.CurrencyAdapter
 import com.example.exchangerates.model.Currency
+import com.example.exchangerates.network.InternetConnection
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import java.io.IOException
@@ -22,37 +21,31 @@ import java.io.IOException
 
 class HomeFragment : Fragment() {
 
-    private lateinit var doc: Document
-    private lateinit var secondThread: Thread
-    private lateinit var runnable: Runnable
     private lateinit var list: RecyclerView
     private lateinit var adapter: CurrencyAdapter
     private lateinit var currencyList: ArrayList<Currency>
     private lateinit var progressBar: ProgressBar
+    private lateinit var lLayout: LinearLayout
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater,
+        container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
-        list = view.findViewById(R.id.currencyList)
 
-        init()
+        val internetConnection = InternetConnection(requireContext())
 
-        adapter.notifyDataSetChanged()
-        list.adapter = adapter
+        if (internetConnection.isOnline) {
+            lLayout = view.findViewById(R.id.linearLayout)
+            list = view.findViewById(R.id.currencyList)
 
-        val decoration = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
-        decoration.setDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.color.design_default_color_on_primary
-            )!!
-        )
-        list.addItemDecoration(decoration)
+            init()
+        }
+        else {
+            Toast.makeText(requireContext(), "Отсутствует подключение к интернету", Toast.LENGTH_LONG).show()
+            progressBar.visibility = View.GONE
+        }
 
         return view
     }
@@ -60,17 +53,17 @@ class HomeFragment : Fragment() {
     private fun init() {
         currencyList = ArrayList()
         adapter = CurrencyAdapter(requireContext(), currencyList)
-        list.adapter
+        list.adapter = adapter
 
-        runnable = Runnable { getCurrency() }
-        secondThread = Thread(runnable)
+        val runnable = Runnable { getCurrency() }
+        val secondThread = Thread(runnable)
         secondThread.start()
 
     }
 
     private fun getCurrency() {
         try {
-            doc = Jsoup.connect("https://myfin.by/currency/minsk").get()
+            val doc = Jsoup.connect("https://myfin.by/currency/minsk").get()
 
             val tables: Elements = doc.getElementsByTag("tbody")
             val table: Element = tables[0]
@@ -85,7 +78,7 @@ class HomeFragment : Fragment() {
                 currencyList.add(currency)
 
                 if (i == table.childrenSize() - 1) {
-                    requireActivity().runOnUiThread { progressBar.visibility = View.GONE }
+                    onLoadChange()
                 }
             }
             requireActivity().runOnUiThread { adapter.notifyDataSetChanged() }
@@ -93,6 +86,13 @@ class HomeFragment : Fragment() {
 
         catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    private fun onLoadChange() {
+        requireActivity().runOnUiThread {
+            lLayout.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
         }
     }
 }
