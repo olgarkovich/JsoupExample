@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -27,6 +28,7 @@ class HomeFragment : Fragment() {
     private lateinit var list: RecyclerView
     private lateinit var adapter: CurrencyAdapter
     private lateinit var currencyList: ArrayList<Currency>
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +36,9 @@ class HomeFragment : Fragment() {
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        list = view.findViewById<RecyclerView>(R.id.currencyList)
+        progressBar = view.findViewById(R.id.progressBar)
+        progressBar.visibility = View.VISIBLE
+        list = view.findViewById(R.id.currencyList)
 
         init()
 
@@ -78,8 +82,11 @@ class HomeFragment : Fragment() {
                     tableElement.child(2).text(),
                     tableElement.child(3).text()
                 )
-                currency.checkName()
                 currencyList.add(currency)
+
+                if (i == table.childrenSize() - 1) {
+                    requireActivity().runOnUiThread { progressBar.visibility = View.GONE }
+                }
             }
             requireActivity().runOnUiThread { adapter.notifyDataSetChanged() }
         }
@@ -87,14 +94,5 @@ class HomeFragment : Fragment() {
         catch (e: IOException) {
             e.printStackTrace()
         }
-    }
-
-    private fun seedData(): ArrayList<Currency> {
-        val currencyList = ArrayList<Currency>()
-        for (i in 0..5) {
-            val currency = Currency("Доллар", "2.34343", "3.21321", "2313133")
-            currencyList.add(currency)
-        }
-        return currencyList
     }
 }

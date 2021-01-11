@@ -27,14 +27,14 @@ class CurrencyAdapter (context: Context, private val list: ArrayList<Currency>
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val name: TextView = itemView.findViewById(R.id.currencyName)
-        private val sale: TextView = itemView.findViewById(R.id.currencySale)
         private val buying: TextView = itemView.findViewById(R.id.currencyBuying)
+        private val sale: TextView = itemView.findViewById(R.id.currencySale)
         private val nBank: TextView = itemView.findViewById(R.id.currencyNBank)
 
         fun bind(currency: Currency) {
             name.text = currency.name
-            sale.text = currency.sale
             buying.text = currency.buying
+            sale.text = currency.sale
             nBank.text = currency.nBank
         }
     }

@@ -4,4 +4,8 @@
     <string name="title_converter">Converter</string>
     <string name="title_bank">Banks</string>
     <string name="exchange_rates">Exchange Rates</string>
+    <string name="currency">Валюта</string>
+    <string name="buying">Покупка</string>
+    <string name="sale">Продажа</string>
+    <string name="n_bank">НБ РБ</string>
 </resources>
