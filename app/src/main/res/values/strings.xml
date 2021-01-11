@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Exchange Rates</string>
-    <string name="title_activity_main2">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_converter">Converter</string>
     <string name="title_bank">Banks</string>
+    <string name="exchange_rates">Exchange Rates</string>
 </resources>
