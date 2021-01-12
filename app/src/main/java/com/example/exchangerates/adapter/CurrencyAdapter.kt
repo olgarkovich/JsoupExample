@@ -15,7 +15,7 @@ class CurrencyAdapter (context: Context, private val list: ArrayList<Currency>
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.list_item, parent, false))
+        return ViewHolder(inflater.inflate(R.layout.list_item_currency, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

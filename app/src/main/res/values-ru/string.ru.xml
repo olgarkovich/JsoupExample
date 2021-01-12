@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Курсы валют</string>
-    <string name="title_home">Главная</string>
-    <string name="title_converter">Конвертер</string>
-    <string name="title_bank">Банки</string>
-    <string name="exchange_rates">Курсы валют</string>
-</resources>
