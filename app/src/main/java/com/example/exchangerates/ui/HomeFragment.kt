@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -23,9 +24,11 @@ class HomeFragment : Fragment() {
 
     private lateinit var list: RecyclerView
     private lateinit var adapter: CurrencyAdapter
+    private lateinit var internetConnection: InternetConnection
     private lateinit var currencyList: ArrayList<Currency>
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
+    private lateinit var dateTime: TextView
 
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,10 +37,11 @@ class HomeFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
 
-        val internetConnection = InternetConnection(requireContext())
+        internetConnection = InternetConnection(requireContext())
 
         if (internetConnection.isOnline) {
             lLayout = view.findViewById(R.id.linearLayout)
+            dateTime = view.findViewById(R.id.dateTime)
             list = view.findViewById(R.id.currencyList)
 
             init()
@@ -93,6 +97,8 @@ class HomeFragment : Fragment() {
         requireActivity().runOnUiThread {
             lLayout.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
+
+            dateTime.text = getString(R.string.date_time, internetConnection.getDateTime())
         }
     }
 }

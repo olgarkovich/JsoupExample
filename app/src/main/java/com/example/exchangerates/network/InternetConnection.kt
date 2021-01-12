@@ -3,6 +3,9 @@ package com.example.exchangerates.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class InternetConnection (context: Context) {
 
@@ -20,5 +23,12 @@ class InternetConnection (context: Context) {
             )
         }
         return false
+    }
+
+    fun getDateTime(): String {
+        val currentDate = Date()
+        val dateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+
+        return dateFormat.format(currentDate)
     }
 }
