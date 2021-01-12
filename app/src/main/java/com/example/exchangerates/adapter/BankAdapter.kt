@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exchangerates.R
 import com.example.exchangerates.model.Bank
-import com.example.exchangerates.model.Currency
-import org.w3c.dom.Text
 
 class BankAdapter (context: Context, private val list: ArrayList<Bank>
 ) : RecyclerView.Adapter<BankAdapter.ViewHolder> () {
