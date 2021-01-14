@@ -13,18 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.exchangerates.R
 import com.example.exchangerates.adapter.BankAdapter
 import com.example.exchangerates.model.Bank
-import com.example.exchangerates.model.CurrencyPair
 import com.example.exchangerates.network.InternetConnection
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
-import java.io.IOException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BankFragment : Fragment() {
 
     private lateinit var list: RecyclerView
     private lateinit var adapter: BankAdapter
-    //private lateinit var internetConnection: InternetConnection
     private lateinit var bankList: ArrayList<Bank>
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
@@ -34,12 +30,9 @@ class BankFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_bank, container, false)
         progressBar = view.findViewById(R.id.progressBarBank)
         progressBar.visibility = View.VISIBLE
-
-        //internetConnection = InternetConnection(requireContext())
 
         if (InternetConnection.isOnline(requireContext())) {
             lLayout = view.findViewById(R.id.linearLayoutBank)
@@ -65,60 +58,19 @@ class BankFragment : Fragment() {
         adapter = BankAdapter(requireContext(), bankList)
         list.adapter = adapter
 
-        val runnable = Runnable { getCurrency() }
-        val secondThread = Thread(runnable)
-        secondThread.start()
-
+        GlobalScope.launch { getBank() }
     }
 
-    private fun getCurrency() {
-        try {
-            val doc = Jsoup.connect("https://myfin.by/currency/minsk").get()
-
-            val tables: Elements = doc.getElementsByTag("tbody")
-            val table: Element = tables[1]
-            val tableElements = table.children()
-            val count = 9
-
-            for (i in 1 until tableElements.size) {
-
-                if(tableElements[i].childrenSize() == count) {
-                    val currencyList = ArrayList<CurrencyPair>()
-
-                    for (n in 1 until count step 2) {
-                        currencyList.add(
-                            CurrencyPair(
-                                tableElements[i].child(n).text(),
-                                tableElements[i].child(n + 1).text()
-                            )
-                        )
-                    }
-
-                    val bank = Bank(
-                        tableElements[i].child(0).text(),
-                        currencyList
-                    )
-                    bankList.add(bank)
-                }
-                if (i == tableElements.size - 1) {
-                    onLoadChange()
-                }
-            }
-
-            requireActivity().runOnUiThread { adapter.notifyDataSetChanged() }
-        }
-
-        catch (e: IOException) {
-            e.printStackTrace()
-        }
+    private fun getBank() {
+        InternetConnection.getBank(bankList)
+        requireActivity().runOnUiThread { onLoadChange() }
     }
 
     private fun onLoadChange() {
-        requireActivity().runOnUiThread {
-            lLayout.visibility = View.VISIBLE
-            progressBar.visibility = View.GONE
+        lLayout.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
 
-            dateTime.text = getString(R.string.date_time, InternetConnection.getDateTime())
-        }
+        dateTime.text = getString(R.string.date_time, InternetConnection.getDateTime())
+        adapter.notifyDataSetChanged()
     }
 }

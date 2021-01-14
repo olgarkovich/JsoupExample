@@ -16,17 +16,12 @@ import com.example.exchangerates.model.Currency
 import com.example.exchangerates.network.InternetConnection
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
-import java.io.IOException
 
 
 class HomeFragment : Fragment() {
 
     private lateinit var list: RecyclerView
     private lateinit var adapter: CurrencyAdapter
-//    private lateinit var internetConnection: InternetConnection
     private lateinit var currencyList: ArrayList<Currency>
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
@@ -36,12 +31,9 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
-//
-//        internetConnection = com.example.exchangerates.network.InternetConnection()
 
         if (InternetConnection.isOnline(requireContext())) {
             lLayout = view.findViewById(R.id.linearLayout)
@@ -49,7 +41,8 @@ class HomeFragment : Fragment() {
             list = view.findViewById(R.id.currencyList)
 
             init()
-        } else {
+        }
+        else {
             Toast.makeText(
                 requireContext(),
                 "Отсутствует подключение к интернету",
@@ -67,8 +60,6 @@ class HomeFragment : Fragment() {
         list.adapter = adapter
 
         GlobalScope.launch { getCurrency() }
-
-        onLoadChange()
     }
 
     private fun getCurrency() {

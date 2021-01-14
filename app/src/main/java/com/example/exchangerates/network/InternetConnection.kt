@@ -3,7 +3,9 @@ package com.example.exchangerates.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.example.exchangerates.model.Bank
 import com.example.exchangerates.model.Currency
+import com.example.exchangerates.model.CurrencyPair
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -15,7 +17,7 @@ import kotlin.collections.ArrayList
 
 object InternetConnection {
 
-    var isOnline = false
+    private val url = "https://myfin.by/currency/minsk"
 
     fun isOnline(context: Context?): Boolean {
 
@@ -40,7 +42,7 @@ object InternetConnection {
 
     fun getCurrency(currencyList: ArrayList<Currency>) {
         try {
-            val doc = Jsoup.connect("https://myfin.by/currency/minsk").get()
+            val doc = Jsoup.connect(url).get()
 
             val tables: Elements = doc.getElementsByTag("tbody")
             val table: Element = tables[0]
@@ -59,4 +61,39 @@ object InternetConnection {
         }
     }
 
+    fun getBank(bankList: ArrayList<Bank>) {
+        try {
+            val doc = Jsoup.connect(url).get()
+
+            val tables: Elements = doc.getElementsByTag("tbody")
+            val table: Element = tables[1]
+            val tableElements = table.children()
+            val count = 9
+
+            for (i in 1 until tableElements.size) {
+
+                if(tableElements[i].childrenSize() == count) {
+                    val currencyList = ArrayList<CurrencyPair>()
+
+                    for (n in 1 until count step 2) {
+                        currencyList.add(
+                            CurrencyPair(
+                                tableElements[i].child(n).text(),
+                                tableElements[i].child(n + 1).text()
+                            )
+                        )
+                    }
+
+                    val bank = Bank(
+                        tableElements[i].child(0).text(),
+                        currencyList
+                    )
+                    bankList.add(bank)
+                }
+            }
+        }
+        catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
 }
