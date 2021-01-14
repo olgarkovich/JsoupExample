@@ -24,7 +24,7 @@ class BankFragment : Fragment() {
 
     private lateinit var list: RecyclerView
     private lateinit var adapter: BankAdapter
-    private lateinit var internetConnection: InternetConnection
+    //private lateinit var internetConnection: InternetConnection
     private lateinit var bankList: ArrayList<Bank>
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
@@ -39,9 +39,9 @@ class BankFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBarBank)
         progressBar.visibility = View.VISIBLE
 
-        internetConnection = InternetConnection(requireContext())
+        //internetConnection = InternetConnection(requireContext())
 
-        if (internetConnection.isOnline) {
+        if (InternetConnection.isOnline(requireContext())) {
             lLayout = view.findViewById(R.id.linearLayoutBank)
             dateTime = view.findViewById(R.id.dateTimeBank)
             list = view.findViewById(R.id.bankList)
@@ -118,7 +118,7 @@ class BankFragment : Fragment() {
             lLayout.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
 
-            dateTime.text = getString(R.string.date_time, internetConnection.getDateTime())
+            dateTime.text = getString(R.string.date_time, InternetConnection.getDateTime())
         }
     }
 }

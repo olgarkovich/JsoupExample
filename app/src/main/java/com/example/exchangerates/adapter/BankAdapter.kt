@@ -31,12 +31,6 @@ class BankAdapter (context: Context, private val list: ArrayList<Bank>
             itemView.findViewById(R.id.bankBuyingDollar),  itemView.findViewById(R.id.bankSaleDollar),
             itemView.findViewById(R.id.bankBuyingEuro), itemView.findViewById(R.id.bankSaleEuro),
             itemView.findViewById(R.id.bankBuyingRuble), itemView.findViewById(R.id.bankSaleRuble))
-//        private val buyingDollar: TextView = itemView.findViewById(R.id.bankBuyingDollar)
-//        private val sellDollar: TextView = itemView.findViewById(R.id.bankSaleDollar)
-//        private val buyingEuro: TextView = itemView.findViewById(R.id.bankBuyingEuro)
-//        private val sellEuro: TextView = itemView.findViewById(R.id.bankSaleEuro)
-//        private val buyingRuble: TextView = itemView.findViewById(R.id.bankBuyingRuble)
-//        private val sellRuble: TextView = itemView.findViewById(R.id.bankSaleRuble)
 
         fun bind(bank: Bank) {
             name.text = bank.name

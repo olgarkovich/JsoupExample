@@ -14,6 +14,8 @@ import com.example.exchangerates.R
 import com.example.exchangerates.adapter.CurrencyAdapter
 import com.example.exchangerates.model.Currency
 import com.example.exchangerates.network.InternetConnection
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
@@ -24,30 +26,35 @@ class HomeFragment : Fragment() {
 
     private lateinit var list: RecyclerView
     private lateinit var adapter: CurrencyAdapter
-    private lateinit var internetConnection: InternetConnection
+//    private lateinit var internetConnection: InternetConnection
     private lateinit var currencyList: ArrayList<Currency>
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
     private lateinit var dateTime: TextView
 
-    override fun onCreateView(inflater: LayoutInflater,
-        container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
+//
+//        internetConnection = com.example.exchangerates.network.InternetConnection()
 
-        internetConnection = InternetConnection(requireContext())
-
-        if (internetConnection.isOnline) {
+        if (InternetConnection.isOnline(requireContext())) {
             lLayout = view.findViewById(R.id.linearLayout)
             dateTime = view.findViewById(R.id.dateTime)
             list = view.findViewById(R.id.currencyList)
 
             init()
-        }
-        else {
-            Toast.makeText(requireContext(), "Отсутствует подключение к интернету", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Отсутствует подключение к интернету",
+                Toast.LENGTH_LONG
+            ).show()
             progressBar.visibility = View.GONE
         }
 
@@ -59,46 +66,21 @@ class HomeFragment : Fragment() {
         adapter = CurrencyAdapter(requireContext(), currencyList)
         list.adapter = adapter
 
-        val runnable = Runnable { getCurrency() }
-        val secondThread = Thread(runnable)
-        secondThread.start()
+        GlobalScope.launch { getCurrency() }
 
+        onLoadChange()
     }
 
     private fun getCurrency() {
-        try {
-            val doc = Jsoup.connect("https://myfin.by/currency/minsk").get()
-
-            val tables: Elements = doc.getElementsByTag("tbody")
-            val table: Element = tables[0]
-            for (i in 0 until table.childrenSize()) {
-                val tableElement = table.child(i)
-                val currency = Currency(
-                    tableElement.child(0).text(),
-                    tableElement.child(1).text(),
-                    tableElement.child(2).text(),
-                    tableElement.child(3).text()
-                )
-                currencyList.add(currency)
-
-                if (i == table.childrenSize() - 1) {
-                    onLoadChange()
-                }
-            }
-            requireActivity().runOnUiThread { adapter.notifyDataSetChanged() }
-        }
-
-        catch (e: IOException) {
-            e.printStackTrace()
-        }
+        InternetConnection.getCurrency(currencyList)
+        requireActivity().runOnUiThread { onLoadChange() }
     }
 
     private fun onLoadChange() {
-        requireActivity().runOnUiThread {
-            lLayout.visibility = View.VISIBLE
-            progressBar.visibility = View.GONE
+        lLayout.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
 
-            dateTime.text = getString(R.string.date_time, internetConnection.getDateTime())
-        }
+        dateTime.text = getString(R.string.date_time, InternetConnection.getDateTime())
+        adapter.notifyDataSetChanged()
     }
 }
