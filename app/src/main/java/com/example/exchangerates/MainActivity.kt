@@ -28,30 +28,3 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 }
-
-
-//    private fun init() {
-//
-//        runnable = Runnable { getWeb() }
-//        secondThread = Thread(runnable)
-//        secondThread.start()
-//    }
-//
-//    private fun getWeb() {
-//
-//        try {
-//            doc = Jsoup.connect("https://myfin.by/currency/minsk").get()
-//
-//            val tables: Elements = doc.getElementsByTag("tbody")
-//            val table: Element = tables[0]
-//            Log.d("MyLog", "table : ${doc.title()}")
-//            val tableElement = table.child(0)
-//            Log.d("MyLog", "table : ${tableElement.childrenSize()}")
-//
-//
-//
-//        }
-//        catch (e: IOException) {
-//            e.printStackTrace()
-//        }
-//    }

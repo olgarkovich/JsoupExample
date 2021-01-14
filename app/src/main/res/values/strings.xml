@@ -7,11 +7,12 @@
     <string name="currency">Currency</string>
     <string name="buying">Buying</string>
     <string name="sale">Sale</string>
-    <string name="n_bank">НБ РБ</string>
+    <string name="n_bank">NB RB</string>
     <string name="exchange_rates_in_banks">Exchange rates in banks</string>
     <string name="bank">Bank</string>
     <string name="usd">USD</string>
     <string name="euro">EURO</string>
     <string name="rub">RUB</string>
     <string name="date_time">%1$s</string>
+    <string name="no_internet">No Internet connection</string>
 </resources>
