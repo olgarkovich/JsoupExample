@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
         else {
             Toast.makeText(
                 requireContext(),
-                "Отсутствует подключение к интернету",
+                R.string.no_internet,
                 Toast.LENGTH_LONG
             ).show()
             progressBar.visibility = View.GONE

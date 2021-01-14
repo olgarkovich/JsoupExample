@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_converter"
-        android:icon="@drawable/converter"
-        android:title="@string/title_converter" />
-
-    <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/home"
         android:title="@string/title_home" />

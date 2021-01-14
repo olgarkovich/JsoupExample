@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 
 object InternetConnection {
 
-    private val url = "https://myfin.by/currency/minsk"
+    private const val URL = "https://myfin.by/currency/minsk"
 
     fun isOnline(context: Context?): Boolean {
 
@@ -42,7 +42,7 @@ object InternetConnection {
 
     fun getCurrency(currencyList: ArrayList<Currency>) {
         try {
-            val doc = Jsoup.connect(url).get()
+            val doc = Jsoup.connect(URL).get()
 
             val tables: Elements = doc.getElementsByTag("tbody")
             val table: Element = tables[0]
@@ -63,7 +63,7 @@ object InternetConnection {
 
     fun getBank(bankList: ArrayList<Bank>) {
         try {
-            val doc = Jsoup.connect(url).get()
+            val doc = Jsoup.connect(URL).get()
 
             val tables: Elements = doc.getElementsByTag("tbody")
             val table: Element = tables[1]

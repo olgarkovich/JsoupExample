@@ -12,8 +12,6 @@ import com.example.exchangerates.model.Currency
 class CurrencyAdapter (context: Context, private val list: ArrayList<Currency>
 ) : RecyclerView.Adapter<CurrencyAdapter.ViewHolder> () {
 
-    private val currency: ArrayList<Currency> = arrayListOf()
-
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
