@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exchangerates.R
 import com.example.exchangerates.adapter.CurrencyAdapter
+import com.example.exchangerates.api.ApiResponse
 import com.example.exchangerates.model.Currency
-import com.example.exchangerates.network.InternetConnection
+import com.example.exchangerates.tools.DateTime
+import com.example.exchangerates.tools.InternetConnection
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -63,7 +65,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getCurrency() {
-        InternetConnection.getCurrency(currencyList)
+        ApiResponse.getCurrency(currencyList)
         requireActivity().runOnUiThread { onLoadChange() }
     }
 
@@ -71,7 +73,7 @@ class HomeFragment : Fragment() {
         lLayout.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
 
-        dateTime.text = getString(R.string.date_time, InternetConnection.getDateTime())
+        dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
         adapter.notifyDataSetChanged()
     }
 }
