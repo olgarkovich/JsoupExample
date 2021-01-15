@@ -25,6 +25,11 @@ class BankAdapter (context: Context, private val list: ArrayList<Bank>
 
     private fun getItem(position: Int) : Bank = list[position]
 
+    fun clearBank() {
+        list.clear()
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val name: TextView = itemView.findViewById(R.id.bankName)
         private val currencies: ArrayList<TextView> = arrayListOf(

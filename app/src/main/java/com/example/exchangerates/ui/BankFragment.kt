@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.exchangerates.R
 import com.example.exchangerates.adapter.BankAdapter
 import com.example.exchangerates.api.ApiResponse
@@ -24,6 +25,7 @@ class BankFragment : Fragment() {
     private lateinit var list: RecyclerView
     private lateinit var adapter: BankAdapter
     private lateinit var bankList: ArrayList<Bank>
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
     private lateinit var dateTime: TextView
@@ -33,6 +35,7 @@ class BankFragment : Fragment() {
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_bank, container, false)
+        swipeRefresh = view.findViewById(R.id.bankRefresh)
         progressBar = view.findViewById(R.id.progressBarBank)
         progressBar.visibility = View.VISIBLE
 
@@ -71,8 +74,17 @@ class BankFragment : Fragment() {
     private fun onLoadChange() {
         lLayout.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
-
+        swipeRefresh.isRefreshing = false
         dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        swipeRefresh.setOnRefreshListener {
+            adapter.clearBank()
+            GlobalScope.launch { getBank() }
+        }
     }
 }

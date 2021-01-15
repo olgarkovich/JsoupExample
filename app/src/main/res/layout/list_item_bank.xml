@@ -19,49 +19,49 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_rowSpan="2"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
         <TextView
             android:id="@+id/bankBuyingDollar"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
         <TextView
             android:id="@+id/bankSaleDollar"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
         <TextView
             android:id="@+id/bankBuyingEuro"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
         <TextView
             android:id="@+id/bankSaleEuro"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
         <TextView
             android:id="@+id/bankBuyingRuble"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
         <TextView
             android:id="@+id/bankSaleRuble"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp" />
 
     </GridLayout>
 

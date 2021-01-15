@@ -8,8 +8,10 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.exchangerates.R
 import com.example.exchangerates.adapter.CurrencyAdapter
 import com.example.exchangerates.api.ApiResponse
@@ -25,6 +27,7 @@ class HomeFragment : Fragment() {
     private lateinit var list: RecyclerView
     private lateinit var adapter: CurrencyAdapter
     private lateinit var currencyList: ArrayList<Currency>
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
     private lateinit var dateTime: TextView
@@ -34,6 +37,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        swipeRefresh = view.findViewById(R.id.currencyRefresh)
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
 
@@ -72,8 +76,17 @@ class HomeFragment : Fragment() {
     private fun onLoadChange() {
         lLayout.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
-
+        swipeRefresh.isRefreshing = false
         dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        swipeRefresh.setOnRefreshListener {
+            adapter.clearCurrency()
+            GlobalScope.launch { getCurrency() }
+        }
     }
 }
