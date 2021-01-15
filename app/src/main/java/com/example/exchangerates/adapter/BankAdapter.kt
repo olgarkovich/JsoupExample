@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.exchangerates.R
 import com.example.exchangerates.model.Bank
+import com.example.exchangerates.model.Currency
 
 class BankAdapter (context: Context, private val list: ArrayList<Bank>
 ) : RecyclerView.Adapter<BankAdapter.ViewHolder> () {
@@ -24,6 +25,11 @@ class BankAdapter (context: Context, private val list: ArrayList<Bank>
     override fun getItemCount(): Int = list.size
 
     private fun getItem(position: Int) : Bank = list[position]
+
+    fun addBank(bankList: ArrayList<Bank>) {
+        list += bankList
+        notifyDataSetChanged()
+    }
 
     fun clearBank() {
         list.clear()

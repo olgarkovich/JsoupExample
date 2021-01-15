@@ -45,13 +45,8 @@ class BankFragment : Fragment() {
             list = view.findViewById(R.id.bankList)
 
             init()
-        }
-        else {
-            Toast.makeText(
-                requireContext(),
-                R.string.no_internet,
-                Toast.LENGTH_LONG
-            ).show()
+        } else {
+            Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show()
             progressBar.visibility = View.GONE
         }
 
@@ -83,8 +78,13 @@ class BankFragment : Fragment() {
         super.onResume()
 
         swipeRefresh.setOnRefreshListener {
-            adapter.clearBank()
-            GlobalScope.launch { getBank() }
+            if (InternetConnection.isOnline(requireContext())) {
+                adapter.clearBank()
+                GlobalScope.launch { getBank() }
+            } else {
+                swipeRefresh.isRefreshing = false
+                Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

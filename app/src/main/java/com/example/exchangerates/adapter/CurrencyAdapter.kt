@@ -25,6 +25,11 @@ class CurrencyAdapter (context: Context, private val list: ArrayList<Currency>
 
     private fun getItem(position: Int) : Currency = list[position]
 
+    fun addCurrency(currencyList: ArrayList<Currency>) {
+        list += currencyList
+        notifyDataSetChanged()
+    }
+
     fun clearCurrency() {
         list.clear()
         notifyDataSetChanged()

@@ -8,7 +8,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,7 +19,6 @@ import com.example.exchangerates.tools.DateTime
 import com.example.exchangerates.tools.InternetConnection
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 
 class HomeFragment : Fragment() {
 
@@ -47,13 +45,8 @@ class HomeFragment : Fragment() {
             list = view.findViewById(R.id.currencyList)
 
             init()
-        }
-        else {
-            Toast.makeText(
-                requireContext(),
-                R.string.no_internet,
-                Toast.LENGTH_LONG
-            ).show()
+        } else {
+            Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show()
             progressBar.visibility = View.GONE
         }
 
@@ -85,8 +78,13 @@ class HomeFragment : Fragment() {
         super.onResume()
 
         swipeRefresh.setOnRefreshListener {
-            adapter.clearCurrency()
-            GlobalScope.launch { getCurrency() }
+            if (InternetConnection.isOnline(requireContext())) {
+                adapter.clearCurrency()
+                GlobalScope.launch { getCurrency() }
+            } else {
+                swipeRefresh.isRefreshing = false
+                Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }
