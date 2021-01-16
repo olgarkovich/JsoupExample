@@ -21,7 +21,7 @@ interface BankDao {
     @Query("DELETE FROM bankTable")
     fun deleteAllBank()
 
-    @Query("SELECT * FROM bankTable ORDER BY name DESC")
+    @Query("SELECT * FROM bankTable ")
     fun loadAllBank(): List<Bank>
 
 }

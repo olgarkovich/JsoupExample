@@ -17,8 +17,7 @@ import com.example.exchangerates.api.ApiResponse
 import com.example.exchangerates.model.Bank
 import com.example.exchangerates.repository.BankRepository
 import com.example.exchangerates.repository.CurrencyRepository
-import com.example.exchangerates.tools.DateTime
-import com.example.exchangerates.tools.InternetConnection
+import com.example.exchangerates.tools.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -43,13 +42,13 @@ class BankFragment : Fragment() {
         progressBar.visibility = View.VISIBLE
 
 
-            lLayout = view.findViewById(R.id.linearLayoutBank)
-            dateTime = view.findViewById(R.id.dateTimeBank)
-            list = view.findViewById(R.id.bankList)
+        lLayout = view.findViewById(R.id.linearLayoutBank)
+        dateTime = view.findViewById(R.id.dateTimeBank)
+        list = view.findViewById(R.id.bankList)
 
-            init()
+        init()
 
-        if (InternetConnection.isOnline(requireContext())) {
+        if (!InternetConnection.isOnline(requireContext())) {
             Toast.makeText(
                 requireContext(),
                 R.string.no_internet,
@@ -71,15 +70,20 @@ class BankFragment : Fragment() {
 
     private fun getBank() {
         repository.loadAll(bankList)
-
-        requireActivity().runOnUiThread { onLoadChange() }
+        val date = DateTimeStorage.getDateTime(
+            requireContext(), BANK_DATE_TIME, DATE_TIME_VALUE)
+        requireActivity().runOnUiThread { onLoadChange(date) }
     }
 
-    private fun onLoadChange() {
+    private fun onLoadChange(date: String?) {
+        if (InternetConnection.isOnline(context)) {
+            dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
+        } else {
+            dateTime.text = date
+        }
         lLayout.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
         swipeRefresh.isRefreshing = false
-        dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
+        progressBar.visibility = View.GONE
         adapter.notifyDataSetChanged()
     }
 

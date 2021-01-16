@@ -3,12 +3,12 @@ package com.example.exchangerates.api
 import com.example.exchangerates.model.Bank
 import com.example.exchangerates.model.Currency
 import com.example.exchangerates.model.CurrencyPair
+import com.example.exchangerates.tools.URL
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import java.io.IOException
 
-private const val URL = "https://myfin.by/currency/minsk"
 class ApiResponse {
     companion object {
         fun getCurrency(currencyList: ArrayList<Currency>) {

@@ -18,7 +18,7 @@ interface CurrencyDao {
     @Query("DELETE FROM currencyTable")
     fun deleteAllCurrency()
 
-    @Query("SELECT * FROM currencyTable WHERE sale!='' ORDER BY name DESC")
+    @Query("SELECT * FROM currencyTable WHERE sale!='' ")
     fun loadAllCurrency(): List<Currency>
 
     @Query("SELECT * FROM currencyTable WHERE sale='' LIMIT 1")

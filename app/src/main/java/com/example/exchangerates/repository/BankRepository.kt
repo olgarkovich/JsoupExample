@@ -4,11 +4,8 @@ import android.content.Context
 import com.example.exchangerates.api.ApiResponse
 import com.example.exchangerates.db.AppDatabase
 import com.example.exchangerates.db.BankDao
-import com.example.exchangerates.db.CurrencyDao
 import com.example.exchangerates.model.Bank
-import com.example.exchangerates.model.Currency
-import com.example.exchangerates.tools.DateTime
-import com.example.exchangerates.tools.InternetConnection
+import com.example.exchangerates.tools.*
 import kotlinx.coroutines.CoroutineScope
 
 class BankRepository(private val context: Context, scope: CoroutineScope) {
@@ -19,21 +16,12 @@ class BankRepository(private val context: Context, scope: CoroutineScope) {
     fun loadAll(bankList: ArrayList<Bank>) {
         if (InternetConnection.isOnline(context)) {
             ApiResponse.getBank(bankList)
-            deleteAll()
-            insertAll(bankList)
+            storeData(bankList)
         } else {
             bankList.clear()
             bankList.addAll(bankDao.loadAllBank())
         }
     }
-
-//    private fun insertDateTime() {
-//        currencyDao.insert(Currency(DateTime.getDateTime(), "", "", ""))
-//    }
-
-//    fun loadDateTime(): String {
-//        return currencyDao.loadDateTime().name
-//    }
 
     private fun insertAll(bankList: List<Bank>) {
         bankDao.insertAllBank(bankList)
@@ -41,5 +29,11 @@ class BankRepository(private val context: Context, scope: CoroutineScope) {
 
     private fun deleteAll() {
         bankDao.deleteAllBank()
+    }
+
+    private fun storeData(bankList: ArrayList<Bank>) {
+        deleteAll()
+        insertAll(bankList)
+        DateTimeStorage.setDateTime(context, BANK_DATE_TIME, DATE_TIME_VALUE)
     }
 }

@@ -15,13 +15,13 @@ import com.example.exchangerates.R
 import com.example.exchangerates.adapter.CurrencyAdapter
 import com.example.exchangerates.model.Currency
 import com.example.exchangerates.repository.CurrencyRepository
-import com.example.exchangerates.tools.DateTime
-import com.example.exchangerates.tools.InternetConnection
+import com.example.exchangerates.tools.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
+
     private lateinit var list: RecyclerView
     private lateinit var adapter: CurrencyAdapter
     private lateinit var currencyList: ArrayList<Currency>
@@ -68,19 +68,20 @@ class HomeFragment : Fragment() {
 
     private fun getCurrency() {
         repository.loadAll(currencyList)
-        val date = repository.loadDateTime()
+        val date =  DateTimeStorage.getDateTime(
+            requireContext(), CURRENCY_DATE_TIME, DATE_TIME_VALUE)
         requireActivity().runOnUiThread { onLoadChange(date) }
     }
 
-    private fun onLoadChange(date: String) {
-        lLayout.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
-        swipeRefresh.isRefreshing = false
+    private fun onLoadChange(date: String?) {
         if (InternetConnection.isOnline(context)) {
             dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
         } else {
             dateTime.text = date
         }
+        lLayout.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+        swipeRefresh.isRefreshing = false
         adapter.notifyDataSetChanged()
     }
 
