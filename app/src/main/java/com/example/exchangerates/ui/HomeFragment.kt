@@ -1,3 +1,4 @@
+
 package com.example.exchangerates.ui
 
 import android.os.Bundle
@@ -13,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.exchangerates.R
 import com.example.exchangerates.adapter.CurrencyAdapter
-import com.example.exchangerates.api.ApiResponse
 import com.example.exchangerates.model.Currency
-import com.example.exchangerates.tools.DateTime
-import com.example.exchangerates.tools.InternetConnection
+import com.example.exchangerates.repository.CurrencyRepository
+import com.example.exchangerates.tools.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -26,6 +26,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: CurrencyAdapter
     private lateinit var currencyList: ArrayList<Currency>
     private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var repository: CurrencyRepository
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
     private lateinit var dateTime: TextView
@@ -39,21 +40,25 @@ class HomeFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
 
-        if (InternetConnection.isOnline(requireContext())) {
-            lLayout = view.findViewById(R.id.linearLayout)
-            dateTime = view.findViewById(R.id.dateTime)
-            list = view.findViewById(R.id.currencyList)
+        lLayout = view.findViewById(R.id.linearLayout)
+        dateTime = view.findViewById(R.id.dateTime)
+        list = view.findViewById(R.id.currencyList)
 
-            init()
-        } else {
-            Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show()
-            progressBar.visibility = View.GONE
+        init()
+
+        if (!InternetConnection.isOnline(requireContext())) {
+            Toast.makeText(
+                requireContext(),
+                R.string.no_internet,
+                Toast.LENGTH_LONG
+            ).show()
         }
-
         return view
     }
 
     private fun init() {
+        repository = CurrencyRepository(requireContext(), GlobalScope)
+
         currencyList = ArrayList()
         adapter = CurrencyAdapter(requireContext(), currencyList)
         list.adapter = adapter
@@ -62,15 +67,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun getCurrency() {
-        ApiResponse.getCurrency(currencyList)
-        requireActivity().runOnUiThread { onLoadChange() }
+        repository.loadAll(currencyList)
+        val date =  DateTimeStorage.getDateTime(
+            requireContext(), CURRENCY_DATE_TIME, DATE_TIME_VALUE)
+        requireActivity().runOnUiThread { onLoadChange(date) }
     }
 
-    private fun onLoadChange() {
+    private fun onLoadChange(date: String?) {
+        if (InternetConnection.isOnline(context)) {
+            dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
+        } else {
+            dateTime.text = date
+        }
         lLayout.visibility = View.VISIBLE
         progressBar.visibility = View.GONE
         swipeRefresh.isRefreshing = false
-        dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
         adapter.notifyDataSetChanged()
     }
 

@@ -15,8 +15,9 @@ import com.example.exchangerates.R
 import com.example.exchangerates.adapter.BankAdapter
 import com.example.exchangerates.api.ApiResponse
 import com.example.exchangerates.model.Bank
-import com.example.exchangerates.tools.DateTime
-import com.example.exchangerates.tools.InternetConnection
+import com.example.exchangerates.repository.BankRepository
+import com.example.exchangerates.repository.CurrencyRepository
+import com.example.exchangerates.tools.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -26,6 +27,7 @@ class BankFragment : Fragment() {
     private lateinit var adapter: BankAdapter
     private lateinit var bankList: ArrayList<Bank>
     private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var repository: BankRepository
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
     private lateinit var dateTime: TextView
@@ -39,21 +41,25 @@ class BankFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBarBank)
         progressBar.visibility = View.VISIBLE
 
-        if (InternetConnection.isOnline(requireContext())) {
-            lLayout = view.findViewById(R.id.linearLayoutBank)
-            dateTime = view.findViewById(R.id.dateTimeBank)
-            list = view.findViewById(R.id.bankList)
+        lLayout = view.findViewById(R.id.linearLayoutBank)
+        dateTime = view.findViewById(R.id.dateTimeBank)
+        list = view.findViewById(R.id.bankList)
 
-            init()
-        } else {
-            Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show()
-            progressBar.visibility = View.GONE
+        init()
+
+        if (!InternetConnection.isOnline(requireContext())) {
+            Toast.makeText(
+                requireContext(),
+                R.string.no_internet,
+                Toast.LENGTH_LONG
+            ).show()
         }
-
         return view
     }
 
     private fun init() {
+        repository = BankRepository(requireContext(), GlobalScope)
+
         bankList = ArrayList()
         adapter = BankAdapter(requireContext(), bankList)
         list.adapter = adapter
@@ -62,15 +68,21 @@ class BankFragment : Fragment() {
     }
 
     private fun getBank() {
-        ApiResponse.getBank(bankList)
-        requireActivity().runOnUiThread { onLoadChange() }
+        repository.loadAll(bankList)
+        val date = DateTimeStorage.getDateTime(
+            requireContext(), BANK_DATE_TIME, DATE_TIME_VALUE)
+        requireActivity().runOnUiThread { onLoadChange(date) }
     }
 
-    private fun onLoadChange() {
+    private fun onLoadChange(date: String?) {
+        if (InternetConnection.isOnline(context)) {
+            dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
+        } else {
+            dateTime.text = date
+        }
         lLayout.visibility = View.VISIBLE
-        progressBar.visibility = View.GONE
         swipeRefresh.isRefreshing = false
-        dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
+        progressBar.visibility = View.GONE
         adapter.notifyDataSetChanged()
     }
 
