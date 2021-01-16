@@ -15,6 +15,8 @@ import com.example.exchangerates.R
 import com.example.exchangerates.adapter.BankAdapter
 import com.example.exchangerates.api.ApiResponse
 import com.example.exchangerates.model.Bank
+import com.example.exchangerates.repository.BankRepository
+import com.example.exchangerates.repository.CurrencyRepository
 import com.example.exchangerates.tools.DateTime
 import com.example.exchangerates.tools.InternetConnection
 import kotlinx.coroutines.GlobalScope
@@ -26,6 +28,7 @@ class BankFragment : Fragment() {
     private lateinit var adapter: BankAdapter
     private lateinit var bankList: ArrayList<Bank>
     private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var repository: BankRepository
     private lateinit var progressBar: ProgressBar
     private lateinit var lLayout: LinearLayout
     private lateinit var dateTime: TextView
@@ -39,26 +42,26 @@ class BankFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBarBank)
         progressBar.visibility = View.VISIBLE
 
-        if (InternetConnection.isOnline(requireContext())) {
+
             lLayout = view.findViewById(R.id.linearLayoutBank)
             dateTime = view.findViewById(R.id.dateTimeBank)
             list = view.findViewById(R.id.bankList)
 
             init()
-        }
-        else {
+
+        if (InternetConnection.isOnline(requireContext())) {
             Toast.makeText(
                 requireContext(),
                 R.string.no_internet,
                 Toast.LENGTH_LONG
             ).show()
-            progressBar.visibility = View.GONE
         }
-
         return view
     }
 
     private fun init() {
+        repository = BankRepository(requireContext(), GlobalScope)
+
         bankList = ArrayList()
         adapter = BankAdapter(requireContext(), bankList)
         list.adapter = adapter
@@ -67,7 +70,8 @@ class BankFragment : Fragment() {
     }
 
     private fun getBank() {
-        ApiResponse.getBank(bankList)
+        repository.loadAll(bankList)
+
         requireActivity().runOnUiThread { onLoadChange() }
     }
 
@@ -83,8 +87,13 @@ class BankFragment : Fragment() {
         super.onResume()
 
         swipeRefresh.setOnRefreshListener {
-            adapter.clearBank()
-            GlobalScope.launch { getBank() }
+            if (InternetConnection.isOnline(requireContext())) {
+                adapter.clearBank()
+                GlobalScope.launch { getBank() }
+            } else {
+                swipeRefresh.isRefreshing = false
+                Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

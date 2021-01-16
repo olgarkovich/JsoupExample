@@ -12,6 +12,6 @@ data class Currency(
     var nBank: String
 ) : Serializable {
 
-    @PrimaryKey(autoGenerate = true) //необходимо
+    @PrimaryKey(autoGenerate = true)
     var id = 0
 }

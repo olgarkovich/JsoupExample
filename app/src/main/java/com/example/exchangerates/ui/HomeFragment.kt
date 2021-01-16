@@ -78,8 +78,7 @@ class HomeFragment : Fragment() {
         swipeRefresh.isRefreshing = false
         if (InternetConnection.isOnline(context)) {
             dateTime.text = getString(R.string.date_time, DateTime.getDateTime())
-        }
-        else {
+        } else {
             dateTime.text = date
         }
         adapter.notifyDataSetChanged()
