@@ -38,10 +38,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        fun populateDatabase(currencyDao: CurrencyDao, bankDao: BankDao) { // заполнение бд некоторыми исходными данными
+        fun populateDatabase(
+            currencyDao: CurrencyDao,
+            bankDao: BankDao
+        ) {
             currencyDao.insert(Currency("0", "1", "2", "3"))
             bankDao.insert(Bank("0", arrayListOf(CurrencyPair("1", "2"))))
-
         }
 
         private class AppDatabaseCallback(

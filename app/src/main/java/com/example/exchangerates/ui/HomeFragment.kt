@@ -1,4 +1,3 @@
-
 package com.example.exchangerates.ui
 
 import android.os.Bundle
@@ -35,7 +34,13 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         swipeRefresh = view.findViewById(R.id.currencyRefresh)
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
@@ -53,7 +58,6 @@ class HomeFragment : Fragment() {
                 Toast.LENGTH_LONG
             ).show()
         }
-        return view
     }
 
     private fun init() {
@@ -68,8 +72,9 @@ class HomeFragment : Fragment() {
 
     private fun getCurrency() {
         repository.loadAll(currencyList)
-        val date =  DateTimeStorage.getDateTime(
-            requireContext(), CURRENCY_DATE_TIME, DATE_TIME_VALUE)
+        val date = DateTimeStorage.getDateTime(
+            requireContext(), CURRENCY_DATE_TIME, DATE_TIME_VALUE
+        )
         requireActivity().runOnUiThread { onLoadChange(date) }
     }
 

@@ -23,14 +23,6 @@ class CurrencyRepository(private val context: Context, scope: CoroutineScope) {
         }
     }
 
-//    private fun insertDateTime() {
-//        currencyDao.insert(Currency(DateTime.getDateTime(), "", "", ""))
-//    }
-//
-//    fun loadDateTime(): String {
-//        return currencyDao.loadDateTime().name
-//    }
-
     private fun insertAll(currencyList: List<Currency>) {
         currencyDao.insertAllCurrency(currencyList)
     }

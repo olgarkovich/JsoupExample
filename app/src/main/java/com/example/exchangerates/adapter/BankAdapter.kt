@@ -10,8 +10,9 @@ import com.example.exchangerates.R
 import com.example.exchangerates.model.Bank
 import com.example.exchangerates.model.Currency
 
-class BankAdapter (context: Context, private val list: ArrayList<Bank>
-) : RecyclerView.Adapter<BankAdapter.ViewHolder> () {
+class BankAdapter(
+    context: Context, private val list: ArrayList<Bank>
+) : RecyclerView.Adapter<BankAdapter.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -22,14 +23,15 @@ class BankAdapter (context: Context, private val list: ArrayList<Bank>
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
     override fun getItemCount(): Int = list.size
 
-    private fun getItem(position: Int) : Bank = list[position]
+    private fun getItem(position: Int): Bank = list[position]
 
-    fun addBank(bankList: ArrayList<Bank>) {
-        list += bankList
-        notifyDataSetChanged()
-    }
+//    fun addBank(bankList: ArrayList<Bank>) {
+//        list += bankList
+//        notifyDataSetChanged()
+//    }
 
     fun clearBank() {
         list.clear()
@@ -39,9 +41,13 @@ class BankAdapter (context: Context, private val list: ArrayList<Bank>
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val name: TextView = itemView.findViewById(R.id.bankName)
         private val currencies: ArrayList<TextView> = arrayListOf(
-            itemView.findViewById(R.id.bankBuyingDollar),  itemView.findViewById(R.id.bankSaleDollar),
-            itemView.findViewById(R.id.bankBuyingEuro), itemView.findViewById(R.id.bankSaleEuro),
-            itemView.findViewById(R.id.bankBuyingRuble), itemView.findViewById(R.id.bankSaleRuble))
+            itemView.findViewById(R.id.bankBuyingDollar),
+            itemView.findViewById(R.id.bankSaleDollar),
+            itemView.findViewById(R.id.bankBuyingEuro),
+            itemView.findViewById(R.id.bankSaleEuro),
+            itemView.findViewById(R.id.bankBuyingRuble),
+            itemView.findViewById(R.id.bankSaleRuble)
+        )
 
         fun bind(bank: Bank) {
             name.text = bank.name

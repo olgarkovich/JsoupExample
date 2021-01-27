@@ -43,7 +43,7 @@ class ApiResponse {
 
                 for (i in 1 until tableElements.size) {
 
-                    if(tableElements[i].childrenSize() == count) {
+                    if (tableElements[i].childrenSize() == count) {
                         val currencyList = ArrayList<CurrencyPair>()
 
                         for (n in 1 until count step 2) {
@@ -62,8 +62,7 @@ class ApiResponse {
                         bankList.add(bank)
                     }
                 }
-            }
-            catch (e: IOException) {
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
         }

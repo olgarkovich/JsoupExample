@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.exchangerates.R
 import com.example.exchangerates.adapter.BankAdapter
-import com.example.exchangerates.api.ApiResponse
 import com.example.exchangerates.model.Bank
 import com.example.exchangerates.repository.BankRepository
-import com.example.exchangerates.repository.CurrencyRepository
 import com.example.exchangerates.tools.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -36,7 +34,13 @@ class BankFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_bank, container, false)
+
+        return inflater.inflate(R.layout.fragment_bank, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         swipeRefresh = view.findViewById(R.id.bankRefresh)
         progressBar = view.findViewById(R.id.progressBarBank)
         progressBar.visibility = View.VISIBLE
@@ -54,7 +58,6 @@ class BankFragment : Fragment() {
                 Toast.LENGTH_LONG
             ).show()
         }
-        return view
     }
 
     private fun init() {
@@ -70,7 +73,8 @@ class BankFragment : Fragment() {
     private fun getBank() {
         repository.loadAll(bankList)
         val date = DateTimeStorage.getDateTime(
-            requireContext(), BANK_DATE_TIME, DATE_TIME_VALUE)
+            requireContext(), BANK_DATE_TIME, DATE_TIME_VALUE
+        )
         requireActivity().runOnUiThread { onLoadChange(date) }
     }
 

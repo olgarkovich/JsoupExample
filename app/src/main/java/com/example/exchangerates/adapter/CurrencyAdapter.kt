@@ -9,8 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.exchangerates.R
 import com.example.exchangerates.model.Currency
 
-class CurrencyAdapter (context: Context, private val list: ArrayList<Currency>
-) : RecyclerView.Adapter<CurrencyAdapter.ViewHolder> () {
+class CurrencyAdapter(
+    context: Context, private val list: ArrayList<Currency>
+) : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -21,14 +22,15 @@ class CurrencyAdapter (context: Context, private val list: ArrayList<Currency>
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
     override fun getItemCount(): Int = list.size
 
-    private fun getItem(position: Int) : Currency = list[position]
+    private fun getItem(position: Int): Currency = list[position]
 
-    fun addCurrency(currencyList: ArrayList<Currency>) {
-        list += currencyList
-        notifyDataSetChanged()
-    }
+//    fun addCurrency(currencyList: ArrayList<Currency>) {
+//        list += currencyList
+//        notifyDataSetChanged()
+//    }
 
     fun clearCurrency() {
         list.clear()
